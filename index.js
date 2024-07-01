@@ -72,18 +72,24 @@ fs.rename('file.txt', 'new-file.txt', (err)=>{
 
 
 const http = require('http');
-const server = http.createServer((req,res) => {
+const server = http.createServer((req, res) => {
     res.setHeader('Content-Type', 'text/html');
-    if (req.url === '/login') {
-        res.write('<html><head><title>Login Page</title></head><body><h1>Harsh, login!</h1></body></html>');
-    } else {
-        res.write('<html><head><title>Node JS Class</title></head><body><h1>Harsh, hello!</h1></body></html>');
-    }
-    res.end();
-})
+    
+    // Read the index.html file
+    fs.readFile(path.join(__dirname, 'index.html'), (err, data) => {
+        if (err) {
+            res.writeHead(500);
+            res.end('Error loading index.html');
+        } else {
+            res.writeHead(200);
+            res.end(data);
+        }
+    });
+});
 
 const port = 3000;
 const host = 'localhost';
-server.listen(port,host, () => {
+
+server.listen(port, host, () => {
     console.log(`Server is listening on http://${host}:${port}`);
 });
